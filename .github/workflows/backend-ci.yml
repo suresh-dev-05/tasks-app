@@ -15,6 +15,8 @@ jobs:
 
     env:
       IMAGE_NAME: learningsuresh/tasks-app-backend
+      SONAR_ORG_KEY: suresh-dev-05_tasks-app
+      SONAR_PROJECT_KEY: suresh-dev-05
 
     steps:
     - name: Checkout
@@ -44,6 +46,20 @@ jobs:
         cd backend
         npm ci
         npm run build
+    - name: Run tests with coverage
+      run: |
+        cd backend
+        npm test -- --coverage
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2
+      with:
+        projectBaseDir: backend
+        args: >
+          -Dsonar.projectKey=${{env.SONAR_PROJECT_KEY}}
+          -Dsonar.organization=${{env.SONAR_ORG_KEY}}
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Build Docker image
       run: |
