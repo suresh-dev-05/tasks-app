@@ -30,5 +30,3 @@ export default function HomePage() {
     </section>
   );
 }
-
-//a new commit
