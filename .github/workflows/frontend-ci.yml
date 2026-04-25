@@ -1,6 +1,7 @@
 name: Frontend CI/CD
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
@@ -15,8 +16,8 @@ jobs:
 
     env:
       IMAGE_NAME: learningsuresh/tasks-app-frontend
-      SONAR_ORG_KEY: suresh-dev-05_tasks-app
-      SONAR_PROJECT_KEY: suresh-dev-05
+      SONAR_ORG_KEY: suresh-dev-05
+      SONAR_PROJECT_KEY: suresh-dev-05_tasks-app
 
     steps:
       - name: Checkout
