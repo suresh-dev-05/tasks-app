@@ -30,3 +30,5 @@ export default function HomePage() {
     </section>
   );
 }
+
+// adding a dummy commit
