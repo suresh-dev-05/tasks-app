@@ -50,7 +50,7 @@ jobs:
     - name: Run tests with coverage
       run: |
         cd backend
-        npm test -- --coverage
+        npm test -- --coverage --coverageReporters=lcov
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v2
@@ -59,6 +59,10 @@ jobs:
         args: >
           -Dsonar.projectKey=${{env.SONAR_PROJECT_KEY}}
           -Dsonar.organization=${{env.SONAR_ORG_KEY}}
+          -Dsonar.sources=src
+          -Dsonar.tests=test
+          -Dsonar.test.inclusions=test/**/*.spec.ts
+          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 

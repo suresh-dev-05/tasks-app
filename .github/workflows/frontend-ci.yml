@@ -46,16 +46,20 @@ jobs:
         run: |
           cd frontend
           npm ci
-          npm run test -- --coverage
+          npm run test -- --coverage --coverage.reporter=lcov
           npm run build
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
-          projectBaseDir: backend
+          projectBaseDir: frontend
           args: >
             -Dsonar.projectKey=${{env.SONAR_PROJECT_KEY}}
             -Dsonar.organization=${{env.SONAR_ORG_KEY}}
+            -Dsonar.sources=app,components,lib
+            -Dsonar.tests=test
+            -Dsonar.test.inclusions=test/**/*.spec.ts,test/**/*.spec.tsx
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
