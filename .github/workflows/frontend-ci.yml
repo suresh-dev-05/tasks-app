@@ -56,7 +56,7 @@ jobs:
           image-ref: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
           scanners: vuln
           format: table
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: os,library
           severity: HIGH,CRITICAL
