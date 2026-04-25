@@ -1,0 +1,55 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+      - staging
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: learningsuresh/backend
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set environment
+      id: env
+      run: |
+        if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+          echo "ENV=prod" >> $GITHUB_ENV
+          echo "TAG=prod" >> $GITHUB_ENV
+        elif [[ "${GITHUB_REF##*/}" == "staging" ]]; then
+          echo "ENV=staging" >> $GITHUB_ENV
+          echo "TAG=staging" >> $GITHUB_ENV
+        else
+          echo "ENV=dev" >> $GITHUB_ENV
+          echo "TAG=dev" >> $GITHUB_ENV
+        fi
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install & Build
+      run: |
+        cd backend
+        npm ci
+        npm run build
+
+    - name: Build Docker image
+      run: |
+        docker build -t $IMAGE_NAME:$TAG ./backend
+
+    - name: Push Docker image
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker push $IMAGE_NAME:$TAG
